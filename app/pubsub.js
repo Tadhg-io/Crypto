@@ -41,8 +41,9 @@ class PubSub {
         }
     }
 
+    // publishes a message to a specific channel
     publish({ channel, message }) {
-        this.pubnub.publish({ channel, message });
+        this.pubnub.publish({channel, message}); 
     }
 
     broadcastChain() {
