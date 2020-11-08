@@ -34,14 +34,36 @@ app.post('/api/mine', (req, res) => {
 app.post('/api/transact', (req, res) => {
     // get the parameters
     const { amount, recipient } = req.body;
-    // create the transaction
-    const transaction = wallet.createTransaction({ recipient, amount });
+
+    // get an existing transaction for this recipient in the Pool
+    let transaction = transactionPool.existingTransaction({ inputAddress: wallet.publicKey });
+
+    try {
+        // if the transaction already exists
+        if(transaction) {
+            // update the existing transaction
+            transaction.update({ senderWallet: wallet, recipient, amount });
+        }
+        else {
+            // create the transaction
+            transaction = wallet.createTransaction({ recipient, amount });
+        }
+        
+    }
+    catch(error) {
+        return res.status(400).json({ type: 'error', message: error.message });
+    }
+
     // add this to the local transaction pool
     transactionPool.setTransaction(transaction);
-    console.log('transactionPool', transactionPool);
 
     // respond with the transaction
-    res.json({transaction});
+    res.json({ type: 'success', transaction});
+});
+
+// gets the transaction pool
+app.get('/api/transaction-pool-map', (req, res) => {
+    res.json(transactionPool.transactionMap);
 });
 
 const syncChains = () => {
