@@ -14,11 +14,12 @@ const CHANNELS = {
 }
 
 class PubSub {
-    constructor({ blockchain, transactionPool }) {
+    constructor({ blockchain, transactionPool, wallet }) {
         this.pubnub = new PubNub(credentials);
 
         this.blockchain = blockchain;
         this.transactionPool = transactionPool;
+        this.wallet = wallet;
     
         // subscribe to all channels
         this.pubnub.subscribe({ channels: Object.values(CHANNELS) });
@@ -41,7 +42,13 @@ class PubSub {
                         this.blockchain.replaceChain(parsedMessage);
                         break;
                     case CHANNELS.TRANSACTION:
-                        this.transactionPool.setTransaction(parsedMessage)
+                        // if this transaction doesn't currently exist
+                        if (!this.transactionPool.existingTransaction({
+                            inputAddress: this.wallet.publicKey
+                          })) {
+                            // publish the transaction
+                            this.transactionPool.setTransaction(parsedMessage);
+                          }
                         break;
                     default:
                         break;

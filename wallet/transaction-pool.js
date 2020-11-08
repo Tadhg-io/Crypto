@@ -11,6 +11,10 @@ class TransactionPool {
         this.transactionMap[transaction.id] = transaction;
     }
 
+    setMap(transactionMap) {
+        this.transactionMap = transactionMap;
+    }
+
     // gets an existing transaction from this Pool
     existingTransaction({ inputAddress }) {
         // get the input parameters
