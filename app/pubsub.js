@@ -27,6 +27,7 @@ class PubSub {
         this.pubnub.addListener(this.listener());
     }
 
+    // listen for messages
     listener() {
         return {
             message: MessageObject => {
