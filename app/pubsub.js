@@ -38,9 +38,15 @@ class PubSub {
                 const parsedMessage = JSON.parse(message);
 
                 switch(channel) {
+                    // if a new chain was broadcast
                     case CHANNELS.BLOCKCHAIN:
-                        this.blockchain.replaceChain(parsedMessage);
+                        // replace our chain with the new chain
+                        this.blockchain.replaceChain(parsedMessage, () => {
+                            // remove our copy of any transaction that is part of the new chain
+                            this.transactionPool.clearBlockchainTransactions({ chain: parsedMessage });
+                        });
                         break;
+                    // if a new transaction was broadcast
                     case CHANNELS.TRANSACTION:
                         // if this transaction doesn't currently exist
                         if (!this.transactionPool.existingTransaction({
