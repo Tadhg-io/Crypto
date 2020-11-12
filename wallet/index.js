@@ -17,7 +17,16 @@ class Wallet{
         return this.keyPair.sign(cryptoHash(data));
     }
 
-    createTransaction({ recipient, amount }) {
+    createTransaction({ recipient, amount, chain }) {
+        // if a chain was passed in
+        if(chain) {
+            // set te balance based on the blockchain history
+            this.balance = Wallet.calculateBalance({
+                chain,
+                address: this.publicKey
+            });
+        }
+
         // ensure sufficient funds in wallet
         if(amount > this.balance) {
             throw new Error ('Amount exceeds balance')
