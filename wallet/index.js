@@ -38,22 +38,40 @@ class Wallet{
 
     // calculates the balance of a wallet
     static calculateBalance({ chain, address }) {
+        let hasConductedTransaction = false;
         let outputsTotal = 0;
+
         // loop through the chain
-        for(let i = 1; i < chain.length; i++) {
+        for(let i = chain.length - 1; i > 0; i--) {
+
             // get the current block
             const block = chain[i];
+
             // for each transaction in this block
             for(let transaction of block.data) {
+
+                // if this wallet has conducted a transaction
+                if(transaction.input.address === address) {
+                    // set the flag used to break, as we don't need to calculate past this block
+                    hasConductedTransaction = true;
+                }
+
                 // get the amount sent from this transaction to the given address
                 const addressOutput = transaction.outputMap[address];
                 // add this amount to our total;
                 if(addressOutput) outputsTotal += addressOutput;
             }
+
+            // if we found a transaction made by this in this block, we don't need to consider blocks further up the chain
+            if(hasConductedTransaction) break;
         }
 
-        // return the starting balance plus the amounts received
-        return STARTING_BALANCE + outputsTotal;
+        // if this wallet has a transaction in the chain
+        return hasConductedTransaction?
+            // return the outputs that we have
+            outputsTotal :
+            // otherwise, we need to include the default balance
+            STARTING_BALANCE + outputsTotal;
     }
 }
 
