@@ -79,6 +79,17 @@ app.get('/api/mine-transactions', (req, res) => {
     res.redirect('/api/blocks');
 });
 
+// get wallet info
+app.get('/api/wallet-info', (req, res) => {
+    const address = wallet.publicKey;
+
+    // return an object with info on the wallet
+    res.json({
+        address,
+        balance: Wallet.calculateBalance({ chain: blockchain.chain, address})
+    });
+});
+
 // syncs this peer with the root node
 const syncWithRootState = () => {
     // call the blocks API endpoint
