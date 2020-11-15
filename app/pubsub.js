@@ -42,7 +42,7 @@ class PubSub {
                     // if a new chain was broadcast
                     case CHANNELS.BLOCKCHAIN:
                         // replace our chain with the new chain
-                        this.blockchain.replaceChain(parsedMessage, () => {
+                        this.blockchain.replaceChain(parsedMessage, true, () => {
                             // remove our copy of any transaction that is part of the new chain
                             this.transactionPool.clearBlockchainTransactions({ chain: parsedMessage });
                         });
