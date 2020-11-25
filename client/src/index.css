@@ -19,6 +19,12 @@ body {
     align-items: center;
 }
 
+#root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .WalletInfo {
     width:50%;
 }
