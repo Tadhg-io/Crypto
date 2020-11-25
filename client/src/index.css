@@ -20,11 +20,19 @@ body {
 }
 
 .WalletInfo {
-    width:500px;
+    width:50%;
 }
 
 .Block {
     border: 1px solid #FFF;
     padding: 5%;
     margin: 2%;
+}
+
+.Transaction {
+    padding:5%;
+}
+
+.BlockHolder {
+    width: 50%;
 }

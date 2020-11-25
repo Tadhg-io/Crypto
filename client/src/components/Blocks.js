@@ -16,7 +16,7 @@ class Blocks extends Component {
         console.log('this.state', this.state);
 
         return (
-            <div>
+            <div className='BlockHolder'>
                 <h3>Blocks</h3>
                 {
                     this.state.blocks.map(block => {
